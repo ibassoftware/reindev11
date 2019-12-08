@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_children,Children Access,model_ibas_hris_employee_children,,1,1,1,1
+access_work,Work Access,model_ibas_hris_employee_work,,1,1,1,1
+access_reference,Reference Access,model_ibas_hris_employee_reference,,1,1,1,1
+access_education,Education Access,model_ibas_hris_employee_education,,1,1,1,1
