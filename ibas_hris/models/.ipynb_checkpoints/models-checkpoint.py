@@ -2,9 +2,6 @@
 
 from odoo import models, fields, api, _
 from num2words import num2words
-import logging
-_logger = logging.getLogger(__name__)
-
 
 
 class ibas_hris(models.Model):
@@ -162,22 +159,6 @@ class ibas_employee(models.Model):
     education_ids = fields.One2many('ibas_hris.employee_education', 'employee_id')
     work_ids = fields.One2many('ibas_hris.employee_work', 'employee_id')
     reference_ids = fields.One2many('ibas_hris.employee_reference', 'employee_id')
-    requirement_ids = fields.One2many('ibas_hris.employee_requirement', 'employee_id', string='Requirements')
-
-    @api.model
-    def create(self, vals):
-        requirements = self.env['ibas_hris.requirement'].search([("is_default","=",True)])
-        res = super().create(vals) 
-        _logger.debug(res)
-        _logger.debug("HEEYYYYYYYYYY")
-        for req in requirements:
-            _logger.debug("HEEYYYYYYYYYY")
-            _logger.debug(req)
-            self.env['ibas_hris.employee_requirement'].create({
-                'employee_id': res.id,
-                'requirement_id': req.id
-            })
-        return res
 
     
 
@@ -334,26 +315,10 @@ class ibas_employee_contract(models.Model):
 
 
 class ibas_requirement(models.Model):
-    _name= 'ibas_hris.requirement'
+    _name: 'ibas_hris.requirement'
 
     name = fields.Char(string='Name', required=True)
     is_default = fields.Boolean(string='Applies to All', default = True)
-
-class ibas_employee_requirement(models.Model):
-    _name = 'ibas_hris.employee_requirement'
-    requirement_id = fields.Many2one('ibas_hris.requirement', string='Requirement', required=True)
-    compliance_date = fields.Date(string='Compliance Date')
-    complied = fields.Boolean(readonly=True, string='Complied', stored=True)
-    file_attachment = fields.Binary(string='Attachment')
-    employee_id = fields.Many2one('hr.employee', string='Employee')
-
-    @api.onchange('compliance_date')
-    def _onchange_compliance_date(self):
-        for rec in self:
-            if (rec.compliance_date is not False):
-                rec.complied = True
-            else:
-                rec.complied = False
 
 
             
