@@ -20,7 +20,8 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','hr','hr_recruitment', 'analytic', 'hr_contract','web', 'hr_attendance'],
+    'depends': ['base','hr','hr_recruitment', 'analytic', 'hr_contract','web', 'hr_attendance',
+    'resource'],
 
     # always loaded
     'data': [

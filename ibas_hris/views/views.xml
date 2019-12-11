@@ -71,6 +71,14 @@
                 
               </xpath>
 
+              <xpath expr="//field[@name='resource_calendar_id']" position="replace">
+                
+               <field name="work_sched"/>
+                
+              </xpath>
+
+              
+
               <xpath expr="//field[@name='passport_id']" position="after">
                  <field name="height"/>
                  <field name="weight"/>
@@ -230,6 +238,24 @@
         name="ibas_hris.probationary_contract"
         file="ibas_hris.probationary_contract"
       />
+
+
+       <record id="ibas_hris_attendance_form" model="ir.ui.view">
+          <field name="name">id.ibashris.attendanceform</field>
+          <field name="model">hr.attendance</field>
+          <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+          <field name="arch" type="xml">
+              
+              <xpath expr="//field[@name='check_out']" position="after">
+                
+                <field name="workday"/>
+               <field name="is_workday"/>
+                <field name="is_tardy"/>
+                <field name="late_in_float"/>
+              </xpath>
+
+          </field>
+      </record>
 
 
     <!-- explicit list view definition -->

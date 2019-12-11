@@ -164,6 +164,8 @@ class ibas_employee(models.Model):
     reference_ids = fields.One2many('ibas_hris.employee_reference', 'employee_id')
     requirement_ids = fields.One2many('ibas_hris.employee_requirement', 'employee_id', string='Requirements')
 
+    work_sched = fields.Many2one('resource.calendar', string='Work Shift')
+
     @api.model
     def create(self, vals):
         requirements = self.env['ibas_hris.requirement'].search([("is_default","=",True)])
