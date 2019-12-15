@@ -1,8 +1,11 @@
 
 from odoo import models, fields, api, _
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 import pytz
+from xlrd import open_workbook
+import base64
+import io
 
 
 
@@ -11,14 +14,16 @@ class ibas_attendance(models.Model):
 
     is_workday = fields.Boolean(compute='_compute_is_workday', string='Is Work Day?', store=True)
     grace_period = fields.Integer(string='Grace Period in Minutes', default=10)
-    is_tardy = fields.Boolean(compute='_compute_is_tardy', string='Is Tardy')
+    is_tardy = fields.Boolean(string='Is Tardy')
     late_in_float = fields.Float(string='Lates')
     workday = fields.Datetime(string='Date Today', readonly=True)
+    workdate = fields.Date(string='Work Date')
 
     @api.onchange('employee_id','check_in')
     def _onchange_employee_id(self):
          for rec in self:
             if (rec.employee_id is not False):
+                rec.workdate = fields.Datetime.from_string(rec.check_in).date()
                 if (rec.employee_id.work_sched is not False):
                     dow = fields.Date.from_string(rec.check_in).weekday()
                     cnts = rec.employee_id.work_sched.attendance_ids.search([("dayofweek","=",dow),
@@ -36,14 +41,16 @@ class ibas_attendance(models.Model):
                         year = check_in.year
                         month = check_in.month
                         day = check_in.day
+                        if check_in.day != fields.Datetime.from_string(rec.check_in).astimezone(tz).day:
+                            day = day + 1
         
-                        
                         myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
                         lapse =  fields.Datetime.from_string(rec.check_in).astimezone(pytz.UTC) - myworkday
                         if (lapse.total_seconds() > 0 ):
                             rec.late_in_float = (lapse.total_seconds() / 60)
                             rec.is_tardy = True 
                         rec.workday = myworkday
+                        
                     
 
   
@@ -82,3 +89,90 @@ class ibas_attendance(models.Model):
                         rec.is_workday = True
         
         return False
+
+
+class AttendanceLoader(models.Model):
+    _name = 'ibas_hris.attendance_loader'
+    
+    attendance_file = fields.Binary(string='CSV FILE')
+    attendance_line_ids = fields.One2many('ibas_hris.attendance_loader_line', 'attendance_loader_id', string='Attendances')
+
+    @api.multi
+    def load_attendance(self):
+        for rec in self:
+            # For each attendance line
+            for att_line in rec.attendance_line_ids:
+                mydate = att_line.work_day
+                ret_count = self.env['hr.attendance'].search_count([ 
+                            ("workdate","=",mydate),
+                            ("employee_id","=",att_line.employee_id.id)
+                        ])
+                if ret_count <= 0:
+                    newatt = self.env['hr.attendance'].create({
+                        'employee_id': att_line.employee_id.id,
+                        'check_in': att_line.check_in,
+                        'check_out': att_line.check_out,
+                    })
+                    att_line.state = 'created'
+                    newatt._onchange_employee_id()
+                else:
+                    att_line.state = 'updated'
+                
+        #Check if no attendance record
+        #if none, create attendance record
+        #if yes, update if necessary
+
+    @api.multi
+    def loadfile(self):
+        for rec in self:
+            data_file = base64.b64decode(rec.attendance_file).decode('utf-8')
+            lines = data_file.split('\n')
+            for l in lines:
+                larray = l.split("\t")
+                if len(larray) > 1:    
+                    biometric_id = larray[0]
+                    parsed_date = larray[1]
+                    dto = datetime.strptime(parsed_date, '%d/%m/%Y %H:%M') - timedelta(hours=8, minutes=0)
+                    this_emp = self.env["hr.employee"].search([("bio_number","=",biometric_id)])
+
+                    if this_emp:    
+                        
+                        ret_count = rec.attendance_line_ids.search_count([
+                            ("attendance_loader_id","=",rec.id), 
+                        ("work_day","=",dto.date()),
+                        ("employee_id","=",this_emp.id)
+                        ])
+                        
+                        if ret_count == 0:
+                            self.env["ibas_hris.attendance_loader_line"].create({
+                                'employee_id': this_emp.id,
+                                'work_day': dto.date(),
+                                'check_in': dto,
+                                'attendance_loader_id': rec.id
+                            })
+                        else:
+                            thisRec = rec.attendance_line_ids.search([
+                                ("attendance_loader_id","=",rec.id), ("work_day","=",dto.date()),("employee_id","=",this_emp.id)])
+                                
+                                
+                            if fields.Datetime.from_string(thisRec.check_in) < dto and thisRec.check_out == False:
+                                thisRec.check_out = dto
+                            elif fields.Datetime.from_string(thisRec.check_in) < dto and fields.Datetime.from_string(thisRec.check_out) < dto:
+
+                                thisRec.check_out = dto
+            
+    
+class AttendanceLoaderLine(models.Model):
+    _name = 'ibas_hris.attendance_loader_line'
+    
+    employee_id = fields.Many2one('hr.employee', string='Employee')
+    work_day = fields.Date(string='Work Day')
+    check_in = fields.Datetime(string='Check In')
+    check_out = fields.Datetime(string='Check Out')
+    attendance_loader_id = fields.Many2one('ibas_hris.attendance_loader', string='Attendance Loader')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('created', 'Created'),
+        ('updated', 'Updated')
+    ], string='Status')
+
