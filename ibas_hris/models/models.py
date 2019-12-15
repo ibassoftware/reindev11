@@ -142,7 +142,12 @@ class ibas_employee(models.Model):
     
     cost_center = fields.Many2one('account.analytic.account', string='Cost Center')
     present_address = fields.Text(string='Present Address')
-    permanent_address = fields.Text(string='Current Address')
+    permanent_address = fields.Text(string='Permanent Address')
+
+    father = fields.Char(string='Father')
+    mother = fields.Char(string='Mother')
+    emergency_contact = fields.Char(string='Emergency Contact')
+    emergency_contact_number = fields.Char(string='Emergency Contact Number')
 
     height = fields.Char(string='Height')
     weight = fields.Char(string='Weight')

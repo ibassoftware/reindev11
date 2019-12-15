@@ -25,7 +25,8 @@
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="ibas_hris.ibas_external_layout_boxed">
                         <div class="page">
-                                <p><span t-field="doc.employee_id.name"/></p>
+                            <p><span t-field="doc.create_date" t-options='{"format": "MM/dd/yyyy"}'/></p>
+                                <p><b><span t-field="doc.employee_id.name"/></b></p>
                                 <p><span t-field="doc.employee_id.present_address"/></p>
                                 <p style="text-align: center;"><strong>PROBATIONARY APPOINTMENT</strong></p>
                                 <p>Dear <span t-field="doc.employee_id.name"/>,</p>
@@ -56,10 +57,10 @@
                                 </tbody>
                                 </table>
                                 <p></p>
-                                <table style="width: 100%;">
-                                <tbody>
-                                <tr>
-                                <td>
+                                <table style="width: 100%; background-color:white">
+                                <tbody style="background-color:white">
+                                <tr style="background-color:white">
+                                <td bgcolor="white">
                                 <p style="text-align: center;">Approved By:</p>
                                 </td>
                                 </tr>

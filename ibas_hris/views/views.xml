@@ -103,6 +103,10 @@
                 <field name="present_address"/>
                 <field name="permanent_address"/>
                 <field name="address_home_id" invisible="1" context="{'show_address': 1}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                <field name="father"></field>
+                <field name="mother"/>
+                <field name="emergency_contact"/>
+                <field name="emergency_contact_number"/>
                </xpath>
 
               <xpath expr="//page[@name='personal_information']" position="after">
@@ -249,6 +253,7 @@
               <xpath expr="//field[@name='check_out']" position="after">
                 
                 <field name="workday"/>
+                <field name="workdate"/>
                <field name="is_workday"/>
                 <field name="is_tardy"/>
                 <field name="late_in_float"/>
