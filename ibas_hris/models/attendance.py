@@ -47,7 +47,7 @@ class ibas_attendance(models.Model):
                             day = day + 1
         
                         myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
-                        lapse =  fields.Datetime.from_string(rec.check_in).astimezone(pytz.UTC) - myworkday
+                        lapse =  checker_date - myworkday
                         if (lapse.total_seconds() > 0 ):
                             rec.late_in_float = (lapse.total_seconds() / 60)
                             rec.is_tardy = True 
