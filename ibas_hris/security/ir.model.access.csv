@@ -3,3 +3,7 @@ access_children,Children Access,model_ibas_hris_employee_children,,1,1,1,1
 access_work,Work Access,model_ibas_hris_employee_work,,1,1,1,1
 access_reference,Reference Access,model_ibas_hris_employee_reference,,1,1,1,1
 access_education,Education Access,model_ibas_hris_employee_education,,1,1,1,1
+access_ibas_hris_attendance_loader_line,access_ibas_hris_attendance_loader_line,model_ibas_hris_attendance_loader_line,base.group_user,1,0,0,0
+access_ibas_hris_attendance_loader,access_ibas_hris_attendance_loader,model_ibas_hris_attendance_loader,base.group_user,1,0,0,0
+access_ibas_hris_employee_requirement,access_ibas_hris_employee_requirement,model_ibas_hris_employee_requirement,base.group_user,1,0,0,0
+access_ibas_hris_requirement,access_ibas_hris_requirement,model_ibas_hris_requirement,base.group_user,1,0,0,0
