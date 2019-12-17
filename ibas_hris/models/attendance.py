@@ -41,7 +41,9 @@ class ibas_attendance(models.Model):
                         year = check_in.year
                         month = check_in.month
                         day = check_in.day
-                        if check_in.day != fields.Datetime.from_string(rec.check_in).astimezone(tz).day:
+                        
+                        checker_date = fields.Datetime.from_string(rec.check_in).replace(tzinfo = pytz.UTC)
+                        if check_in.day != checker_date.astimezone(tz).day:
                             day = day + 1
         
                         myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
