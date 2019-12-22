@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 
+
 class IBASAGTRecon(models.Model):
     _inherit = 'account.bank.statement'
 
@@ -22,6 +23,7 @@ class IBASAGTRecon(models.Model):
                     'partner_id': l.partner_id.id,
                     'amount': myamount
                 })
+
 
 # class ibas_agt(models.Model):
 #     _name = 'ibas_agt.ibas_agt'
