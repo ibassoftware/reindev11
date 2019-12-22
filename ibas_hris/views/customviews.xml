@@ -44,6 +44,49 @@
         groups="hr_attendance.group_hr_attendance_user"
         parent="hr_attendance.menu_hr_attendance_manage_attendances"
         sequence="10"/>
+
+    <record id="ibas_holiday_view_tree" model="ir.ui.view">
+        <field name="name">ibas_hris.holidays.view.tree</field>
+        <field name="model">ibas_hris.holiday</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="holiday_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ibas_hris_holiday_view_form" model="ir.ui.view">
+        <field name="name">ibas_hris.holiday.view.form</field>
+        <field name="model">ibas_hris.holiday</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    <field name="date"/>
+                    <field name="holiday_type"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ibas_holiday_action" model="ir.actions.act_window">
+        <field name="name">Holidays</field>
+        <field name="res_model">ibas_hris.holiday</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="holiday_loader_menu"
+        name="Holidays"
+        action="ibas_holiday_action"
+        groups="hr_attendance.group_hr_attendance_user"
+        parent="hr_attendance.menu_hr_attendance_manage_attendances"
+        sequence="90"/>
     
   </data>
 </odoo>

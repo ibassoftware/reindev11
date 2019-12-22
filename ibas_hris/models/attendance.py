@@ -18,10 +18,16 @@ class ibas_attendance(models.Model):
     late_in_float = fields.Float(string='Lates')
     workday = fields.Datetime(string='Date Today', readonly=True)
     workdate = fields.Date(string='Work Date')
+    is_special = fields.Boolean(string='Is Special Holiday')
+    is_regular = fields.Boolean(string='Is Regular Holiday')
 
     @api.onchange('employee_id','check_in')
     def _onchange_employee_id(self):
          for rec in self:
+            rec.late_in_float = 0
+            rec.is_tardy = False
+            rec.is_special = False
+            rec.is_regular = False
             if (rec.employee_id is not False):
                 rec.workdate = fields.Datetime.from_string(rec.check_in).date()
                 if (rec.employee_id.work_sched is not False):
@@ -45,6 +51,22 @@ class ibas_attendance(models.Model):
                         checker_date = fields.Datetime.from_string(rec.check_in).replace(tzinfo = pytz.UTC)
                         if check_in.day != checker_date.astimezone(tz).day:
                             day = day + 1
+                        
+                        # Add check for holiday here
+                        holidays = self.env['ibas_hris.holiday'].search([("date","=",checker_date.astimezone(tz).date())])
+                        if len(holidays) != 0:
+                            myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
+                            rec.workday = myworkday
+                            if holidays[0].holiday_type == "regular":
+                                rec.is_regular = True
+                                rec.is_workday = False
+                                return
+                            else:
+                                rec.is_special = True
+                                rec.is_workday = False
+                                return
+
+
         
                         myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
                         lapse =  checker_date - myworkday
@@ -80,7 +102,7 @@ class ibas_attendance(models.Model):
     
    
     
-    @api.depends('employee_id', 'check_in')
+    @api.depends('employee_id', 'check_in','is_special','is_regular')
     def _compute_is_workday(self):
         for rec in self:
             if (rec.employee_id is not False):
@@ -88,7 +110,11 @@ class ibas_attendance(models.Model):
                     dow = fields.Date.from_string(rec.check_in).weekday()
                     cnt = rec.employee_id.resource_calendar_id.attendance_ids.search_count([("dayofweek","=",dow)])
                     if (cnt != 0):
-                        rec.is_workday = True
+                        if rec.is_special or rec.is_regular:
+                            rec.is_workday = False
+                        else:
+                            rec.is_workday = True
+                        
         
         return False
 
@@ -178,3 +204,13 @@ class AttendanceLoaderLine(models.Model):
         ('updated', 'Updated')
     ], string='Status')
 
+class IbasHoliday(models.Model):
+    _name = 'ibas_hris.holiday'
+    _description = 'IBAS Holidays'
+    
+    date = fields.Date(string='Date', required=True)
+    name = fields.Char(string='Name', required=True)
+    holiday_type = fields.Selection([
+        ('regular', 'Regular'),
+        ('special', 'Special')
+    ], string='Holiday Type', required=True)   
