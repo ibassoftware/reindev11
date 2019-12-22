@@ -257,6 +257,8 @@
                <field name="is_workday"/>
                 <field name="is_tardy"/>
                 <field name="late_in_float"/>
+                <field name="is_special"/>
+                <field name="is_regular"/>
               </xpath>
 
           </field>
