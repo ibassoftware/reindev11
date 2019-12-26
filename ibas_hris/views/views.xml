@@ -261,6 +261,7 @@
                 <field name="is_regular"/>
                 <field name="is_undertime"/>
                 <field name="undertime_minutes"/>
+
               </xpath>
 
           </field>

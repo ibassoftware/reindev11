@@ -138,6 +138,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
     
     <menuitem
         id="official_business_menu"

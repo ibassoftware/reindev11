@@ -18,6 +18,7 @@ class ibas_attendance(models.Model):
     late_in_float = fields.Float(string='Lates', compute="_onchange_employee_id", store=True)
     workday = fields.Datetime(string='Date Today', readonly=True)
     workdate = fields.Date(string='Work Date')
+
     is_special = fields.Boolean(string='Is Special Holiday', compute="_onchange_employee_id", store=True)
     is_regular = fields.Boolean(string='Is Regular Holiday', compute="_onchange_employee_id", store=True)
     
@@ -64,6 +65,10 @@ class ibas_attendance(models.Model):
         
     
 
+    is_special = fields.Boolean(string='Is Special Holiday')
+    is_regular = fields.Boolean(string='Is Regular Holiday')
+
+
 
     # Change this to computed
     @api.depends('employee_id','check_in')
@@ -73,8 +78,10 @@ class ibas_attendance(models.Model):
             rec.is_tardy = False
             rec.is_special = False
             rec.is_regular = False
+
             rec.is_undertime = False
             rec.undertime_in_float = 0
+
             if (rec.employee_id is not False):
                 rec.workdate = fields.Datetime.from_string(rec.check_in).date()
                 if (rec.employee_id.work_sched is not False):
