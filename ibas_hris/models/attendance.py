@@ -13,21 +13,75 @@ class ibas_attendance(models.Model):
     _inherit = 'hr.attendance'
 
     is_workday = fields.Boolean(compute='_compute_is_workday', string='Is Work Day?', store=True)
-    grace_period = fields.Integer(string='Grace Period in Minutes', default=10)
-    is_tardy = fields.Boolean(string='Is Tardy')
-    late_in_float = fields.Float(string='Lates')
+    grace_period = fields.Integer(string='Grace Period in Minutes', default=10, store=True)
+    is_tardy = fields.Boolean(string='Is Tardy', compute="_onchange_employee_id", store=True)
+    late_in_float = fields.Float(string='Lates', compute="_onchange_employee_id", store=True)
     workday = fields.Datetime(string='Date Today', readonly=True)
     workdate = fields.Date(string='Work Date')
+
+    is_special = fields.Boolean(string='Is Special Holiday', compute="_onchange_employee_id", store=True)
+    is_regular = fields.Boolean(string='Is Regular Holiday', compute="_onchange_employee_id", store=True)
+    
+    is_undertime = fields.Boolean(compute='_compute_is_undertime', string='Is Undertime', store=True)
+    undertime_minutes = fields.Float(compute='_compute_is_undertime', string='Undertime Minutes', store=True)
+    
+    @api.depends('check_out')
+    def _compute_is_undertime(self):
+        for rec in self:
+            rec.undertime_minutes = 0
+            rec.is_undertime = False
+            if (rec.employee_id is not False and rec.check_out != False):
+                rec.workdate = fields.Datetime.from_string(rec.check_in).date()
+                if (rec.employee_id.work_sched is not False):
+                    if rec.is_workday:                       
+                        dow = fields.Date.from_string(rec.check_in).weekday()
+                        cnts = rec.employee_id.work_sched.attendance_ids.search([("dayofweek","=",dow),
+                        ("calendar_id","=",rec.employee_id.work_sched.id)])
+                        if (cnts):
+                            mylen = len(cnts)
+                            myWD = cnts[mylen - 1]
+                            splitTime = str(myWD.hour_to).split(".")
+                            myHour = int(splitTime[0]) - 8
+                            if (len(str(splitTime[1])) <= 1):
+                                splitTime[1] = splitTime[1] + "0"
+                            myMinute = int((float(splitTime[1]) / 100) * 60 )
+
+                            tz = pytz.timezone('Asia/Manila')
+                            check_out = fields.Datetime.from_string(rec.check_out)
+                            year = check_out.year
+                            month = check_out.month
+                            day = check_out.day
+                            
+                            checker_date = fields.Datetime.from_string(rec.check_out).replace(tzinfo = pytz.UTC)
+                            if check_out.day != checker_date.astimezone(tz).day:
+                                day = day + 1
+                    
+                            myworkday = datetime(year,month,day,myHour,myMinute,0,0,pytz.UTC)
+                            lapse =  myworkday - checker_date
+                            if (lapse.total_seconds() > 0 ):
+                                rec.undertime_minutes = (lapse.total_seconds() / 60)
+                                rec.is_undertime = True 
+                            
+        
+    
+
     is_special = fields.Boolean(string='Is Special Holiday')
     is_regular = fields.Boolean(string='Is Regular Holiday')
 
-    @api.onchange('employee_id','check_in')
+
+
+    # Change this to computed
+    @api.depends('employee_id','check_in')
     def _onchange_employee_id(self):
          for rec in self:
             rec.late_in_float = 0
             rec.is_tardy = False
             rec.is_special = False
             rec.is_regular = False
+
+            rec.is_undertime = False
+            rec.undertime_in_float = 0
+
             if (rec.employee_id is not False):
                 rec.workdate = fields.Datetime.from_string(rec.check_in).date()
                 if (rec.employee_id.work_sched is not False):
