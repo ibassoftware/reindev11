@@ -259,6 +259,8 @@
                 <field name="late_in_float"/>
                 <field name="is_special"/>
                 <field name="is_regular"/>
+                <field name="is_undertime"/>
+                <field name="undertime_minutes"/>
               </xpath>
 
           </field>
