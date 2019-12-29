@@ -1,22 +1,18 @@
 <odoo>
     <data>
-        <!-- <template id="listing"> -->
-        <!--   <ul> -->
-        <!--     <li t-foreach="objects" t-as="object"> -->
-        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
-        <!--         <t t-esc="object.display_name"/> -->
-        <!--       </a> -->
-        <!--     </li> -->
-        <!--   </ul> -->
-        <!-- </template> -->
-        <!-- <template id="object"> -->
-        <!--   <h1><t t-esc="object.display_name"/></h1> -->
-        <!--   <dl> -->
-        <!--     <t t-foreach="object._fields" t-as="field"> -->
-        <!--       <dt><t t-esc="field"/></dt> -->
-        <!--       <dd><t t-esc="object[field]"/></dd> -->
-        <!--     </t> -->
-        <!--   </dl> -->
-        <!-- </template> -->
+       <record id="sale_order_ibas_view_form" model="ir.ui.view">
+           <field name="name">sale.order.view.form</field>
+           <field name="model">sale.order</field>
+           <field name="inherit_id" ref="sale.view_order_form"/>
+           <field name="arch" type="xml">
+              <xpath expr="//field[@name='order_line']/tree/field[@name='purchase_price']" position="after">
+                <field name="margin_percent"/>
+              </xpath>
+
+              <xpath expr="//field[@name='margin']" position="after">
+                <field name="total_margin_percent" />
+              </xpath>
+           </field>
+       </record>
     </data>
 </odoo>
