@@ -33,13 +33,19 @@ class IBASAGTRecon(models.Model):
 
 class StockAgeWizard(models.TransientModel):
     _name = 'ibas_agt.stock_age.report'
+
+    from_date = fields.Datetime(string='From', required=True)
+    to_date = fields.Datetime(string='To', required=True)  
     
     @api.multi
     def get_report(self):
         data = {
             'ids': self.ids,
             'model': self._name,
-            'form': {},
+            'form': {
+                'date_start': self.from_date,
+                'date_end': self.to_date,
+            },
         }
 
         # use `module_name.report_id` as reference.
@@ -51,9 +57,16 @@ class ReportStockAge(models.AbstractModel):
 
     @api.model
     def get_report_values(self, docids, data=None):
+
+        date_start = data['form']['date_start']
+        date_end = data['form']['date_end']
         
         docs = []
-        stock_moves = self.env['stock.move'].search([('remaining_qty','>',0)])
+        stock_moves = self.env['stock.move'].search([
+            ('remaining_qty','>',0),
+            ('date','>',date_start),
+            ('date','<',date_end)
+        ])
         for move in stock_moves:
             elapsed_delta = date.today() - fields.Datetime.from_string(move.date).date()
             analytic_tag = "none"
