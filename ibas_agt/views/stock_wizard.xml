@@ -7,7 +7,8 @@
             <form string="Stock Age Report">
                 <sheet>
                     <group>
-                        
+                        <field name="from_date"/>
+                        <field name="to_date"/>
                     </group>
                     <footer>
                         <button string="Generate Report" name="get_report" type="object" class="oe_highlight"/>
