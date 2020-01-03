@@ -50,7 +50,7 @@
                                 <span t-esc="doc['quantity']"/>
                             </td>
                             <td class="text-center">
-                                <span t-esc="doc['value']"/>
+                                <span t-esc="'%.2f'% doc['value']"/>
                             </td>
                              <td class="text-center">
                                 <span t-esc="doc['days']"/>
