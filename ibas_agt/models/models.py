@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+import logging
+
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
+from datetime import date
+
+
+_logger = logging.getLogger(__name__)   
 
 
 class IBASAGTRecon(models.Model):
@@ -23,6 +30,51 @@ class IBASAGTRecon(models.Model):
                     'partner_id': l.partner_id.id,
                     'amount': myamount
                 })
+
+class StockAgeWizard(models.TransientModel):
+    _name = 'ibas_agt.stock_age.report'
+    
+    @api.multi
+    def get_report(self):
+        data = {
+            'ids': self.ids,
+            'model': self._name,
+            'form': {},
+        }
+
+        # use `module_name.report_id` as reference.
+        # `report_action()` will call `get_report_values()` and pass `data` automatically.
+        return self.env.ref('ibas_agt.recap_report').report_action(self, data=data)
+
+class ReportStockAge(models.AbstractModel):
+    _name = 'report.ibas_agt.stock_ageing_report'
+
+    @api.model
+    def get_report_values(self, docids, data=None):
+        
+        docs = []
+        stock_moves = self.env['stock.move'].search([('remaining_qty','>',0)])
+        for move in stock_moves:
+            elapsed_delta = date.today() - fields.Datetime.from_string(move.date).date()
+            analytic_tag = "none"
+            if (move.purchase_line_id):
+                if (move.purchase_line_id.account_analytic_id):
+                    analytic_tag = move.purchase_line_id.account_analytic_id.name
+
+            docs.append({
+                'product': move.product_id.name,
+                'analytic': analytic_tag,
+                'quantity': move.remaining_qty,
+                'value': move.remaining_value,
+                'days': elapsed_delta.days
+            })
+
+        return {
+            'doc_ids': data['ids'],
+            'doc_model': data['model'],
+            'docs': docs,
+        }
+
 
 
 # class ibas_agt(models.Model):
