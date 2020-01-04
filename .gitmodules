@@ -1,0 +1,4 @@
+[submodule "asiaglobal"]
+	path = asiaglobal
+	url = git@github.com:ibassoftware/asiaglobal.git
+	branch = master
