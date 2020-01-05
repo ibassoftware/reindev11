@@ -13,6 +13,17 @@ _logger = logging.getLogger(__name__)
 class IBASAGTRecon(models.Model):
     _inherit = 'account.bank.statement'
 
+    # @api.onchange('balance_end_real')
+    def onchange_balance_end_real(self):
+        for rec in self:
+            statement_diff = rec.balance_end_real - rec.balance_start
+            self.env["account.bank.statement.line"].create({
+                    'statement_id': rec.id,
+                    'date': date.today(),
+                    'name': "Enter Statement Description Here",
+                    'amount': statement_diff
+                })
+
     def ibas_unreconciled_get(self):
         for rec in self:
             lines = self.env['account.move.line'].search([("account_id.id","=",rec.journal_id.default_debit_account_id.id),
