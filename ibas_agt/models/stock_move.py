@@ -27,7 +27,7 @@ class IBASStockMove(models.Model):
     def _compute_price_before_lc(self):
         for rec in self:
             if rec.purchase_line_id is not False:
-                    rec.analytic_id = rec.purchase_line_id.account_analytic_id.id
+                rec.analytic_id = rec.purchase_line_id.account_analytic_id.id
             if rec.landed_cost_value > 0:
                 rec.price_before_lc = (rec.value - rec.landed_cost_value) / rec.quantity_done
                 rec.value_before_lc = rec.value - rec.landed_cost_value
