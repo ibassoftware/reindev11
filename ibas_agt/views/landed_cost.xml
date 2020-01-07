@@ -8,13 +8,13 @@
                 <field name="date"/>
                 <field name="reference"/>
                 <field name="product_id"/>
-                <field name="price_before_lc"/>
-                <field name="price_unit"/>
-                <field name="quantity_done" string="Quantity"/>
-                <field name="value_before_lc"/>
-                <field name="landed_cost_value"/>
-                <field name="value"/>
-                <field name="remaining_qty"/>
+                <field name="price_before_lc" sum="Total"/>
+                <field name="price_unit" sum="Total"/>
+                <field name="quantity_done" string="Quantity" sum="Total"/>
+                <field name="value_before_lc" sum="Total"/>
+                <field name="landed_cost_value" sum="Total"/>
+                <field name="value"  sum="Total"/>
+                <field name="remaining_qty" sum="Total"/>
                 <field name="analytic_id"/>
                 <field name="state" invisible="1"/>
             </tree>
@@ -27,7 +27,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="stock_move_ibas_view_tree"/>
-        <!-- <field name="domain">[('landed_cost_value','>',0)]</field> -->
+        <field name="domain">[('landed_cost_value','>',0)]</field>
     </record>
 
     

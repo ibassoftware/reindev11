@@ -16,8 +16,8 @@ class ibas_attendance(models.Model):
     grace_period = fields.Integer(string='Grace Period in Minutes', default=10, store=True)
     is_tardy = fields.Boolean(string='Is Tardy', compute="_onchange_employee_id", store=True)
     late_in_float = fields.Float(string='Lates', compute="_onchange_employee_id", store=True)
-    workday = fields.Datetime(string='Date Today', readonly=True)
-    workdate = fields.Date(string='Work Date')
+    workday = fields.Datetime(string='Date Today',compute="_onchange_employee_id", readonly=True,store=True)
+    workdate = fields.Date(string='Work Date',compute="_onchange_employee_id", store=True)
 
     is_special = fields.Boolean(string='Is Special Holiday', compute="_onchange_employee_id", store=True)
     is_regular = fields.Boolean(string='Is Regular Holiday', compute="_onchange_employee_id", store=True)

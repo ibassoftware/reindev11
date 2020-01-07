@@ -28,7 +28,8 @@
         'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
-        'views/customviews.xml'
+        'views/customviews.xml',
+        'views/overtime.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

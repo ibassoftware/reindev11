@@ -30,7 +30,8 @@
         'views/templates.xml',
         'views/stock_wizard.xml',
         'views/sale_order_line.xml',
-        'views/landed_cost.xml'
+        'views/landed_cost.xml',
+        'views/stock_age.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
