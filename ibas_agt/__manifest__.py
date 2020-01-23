@@ -21,7 +21,7 @@
 
     # any module necessary for this one to work correctly
 
-    'depends': ['base','account','stock','sale','stock_landed_costs'],
+    'depends': ['base','account','stock','sale','stock_landed_costs', 'report_xlsx', 'purchase'],
 
     # always loaded
     'data': [
@@ -30,8 +30,11 @@
         'views/templates.xml',
         'views/stock_wizard.xml',
         'views/sale_order_line.xml',
+        'views/account_invoice.xml',
         'views/landed_cost.xml',
-        'views/stock_age.xml'
+        'views/stock_age.xml',
+        'views/purchase_order.xml',
+        'report/report_sales_agt.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

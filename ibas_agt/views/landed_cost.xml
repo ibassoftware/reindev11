@@ -7,6 +7,9 @@
             <tree string="Items with Landed Costs" create="false">
                 <field name="date"/>
                 <field name="reference"/>
+                <field name="origin"/>
+                <field name="supplier_name"/>
+                <field name="customer_name"/>
                 <field name="product_id"/>
                 <field name="price_before_lc" sum="Total"/>
                 <field name="price_unit" sum="Total"/>
@@ -16,6 +19,8 @@
                 <field name="value"  sum="Total"/>
                 <field name="remaining_qty" sum="Total"/>
                 <field name="analytic_id"/>
+                <field name="original_currency"/>
+                <field name="original_currency_amount"/>
                 <field name="state" invisible="1"/>
             </tree>
         </field>

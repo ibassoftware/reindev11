@@ -43,13 +43,13 @@
     </record>
 
 
-
+<!-- 
     <menuitem
         id="sale_order_line_menu"
         name="Sales Reports"
         action="sale_order_line_action"
         parent="account.menu_finance_reports"
-        sequence="10"/>
+        sequence="10"/> -->
 
     
 

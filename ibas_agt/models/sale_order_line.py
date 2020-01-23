@@ -14,6 +14,7 @@ class IBASSaleOrderLine(models.Model):
     gross_margin = fields.Float(compute='_compute_gross_margin', string='Gross Margin', store=True)
     invoice_number = fields.Char(compute='_compute_invoice_number', string='Invoice Number', store =True)
     team_name = fields.Char(compute='_compute_team_name', string='Team', store=True)
+    invoice_status = fields.Char(compute='_compute_invoice_number', string='Invoice Status', store =True)
     
     @api.depends('amt_invoiced','qty_delivered')
     def _compute_team_name(self):
@@ -27,6 +28,7 @@ class IBASSaleOrderLine(models.Model):
         for rec in self:
             if len(rec.invoice_lines) > 0:
                 rec.invoice_number = rec.invoice_lines[0].invoice_id.number
+                rec.invoice_status = rec.invoice_lines[0].invoice_id.state
     
     @api.depends('amt_invoiced','total_cost')
     def _compute_gross_margin(self):
