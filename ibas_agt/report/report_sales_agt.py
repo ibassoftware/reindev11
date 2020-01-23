@@ -18,7 +18,7 @@ class SalesXlsx(models.AbstractModel):
 
 
         myids = self.env['account.invoice.line'].search([
-            ('invoice_type','=','out_invoice'),
+            ('invoice_id.type','=','out_invoice'),
             ('invoice_id.date_invoice','>',date_start),
             ('invoice_id.date_invoice','<',date_end)
             ])
