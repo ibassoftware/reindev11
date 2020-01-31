@@ -35,7 +35,7 @@ class IBASSaleOrderLine(models.Model):
         for rec in self:
             rec.gross_margin = rec.amt_invoiced + rec.total_cost
     
-    @api.depends('qty_delivered')
+    @api.depends('qty_delivered', 'move_ids.value')
     @api.multi
     def _compute_total_cost(self):
         for rec in self:
@@ -44,3 +44,13 @@ class IBASSaleOrderLine(models.Model):
                 total = total + moves.value
             
             rec.total_cost = total
+    
+    # @api.multi
+    # def compute_tc(self):
+    #     for rec in self:
+    #         total = 0
+    #         for moves in rec.move_ids:
+    #             total = total + moves.value
+            
+    #         rec.total_cost = total
+        

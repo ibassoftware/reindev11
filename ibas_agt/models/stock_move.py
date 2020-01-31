@@ -43,6 +43,12 @@ class IBASStockMove(models.Model):
             if rec.landed_cost_value > 0:
                 rec.price_before_lc = (rec.value - rec.landed_cost_value) / rec.quantity_done
                 rec.value_before_lc = rec.value - rec.landed_cost_value
+    
+    # @api.onchange('value')
+    # def _onchange_value(self):
+    #     for rec in self:
+    #         if rec.sale_line_id != False:
+    #             rec.sale_line_id.compute_tc()
             
     
 
