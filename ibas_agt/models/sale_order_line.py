@@ -30,10 +30,10 @@ class IBASSaleOrderLine(models.Model):
                 rec.invoice_number = rec.invoice_lines[0].invoice_id.number
                 rec.invoice_status = rec.invoice_lines[0].invoice_id.state
     
-    @api.depends('amt_invoiced','total_cost')
+    @api.depends('price_subtotal','total_cost')
     def _compute_gross_margin(self):
         for rec in self:
-            rec.gross_margin = rec.amt_invoiced + rec.total_cost
+            rec.gross_margin = rec.price_subtotal + rec.total_cost
     
     @api.depends('qty_delivered', 'move_ids.value')
     @api.multi

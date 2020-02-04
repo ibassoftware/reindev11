@@ -239,7 +239,7 @@ class ibas_employee_contract(models.Model):
     work_days = fields.Selection([
         ('six', 'Six Days'),
         ('five', 'Five Days')
-    ], string='Work Days', required=True)
+    ], string='Work Days')
 
     def ComputeSSS(self):
         low = 2250
