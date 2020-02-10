@@ -16,19 +16,19 @@
         <sheet>
           <group>
             <group>
-              <field name="request_date"/>
-              <field name="required_date"/>
-              <field name="requested_by"/>
-              <field name="operation_id" domain="[('code', '=', 'internal')]"/>
+              <field name="request_date" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="required_date" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="requested_by" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="operation_id" domain="[('code', '=', 'internal')]" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
               
             </group>
             <group>
-             <field name="from_location"/>
-              <field name="to_location"/>
-              <field name="reason"/>
-              <field name="transfer_id"/>
+             <field name="from_location" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="to_location" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="reason" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
+              <field name="transfer_id" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}"/>
             </group>
-            <field name="material_request_line_ids">
+            <field name="material_request_line_ids" attrs="{'readonly':['|',('state','=','approved'), ('state','=','fulfilled')]}">
               <tree editable="bottom">
                   <field name="product_id"></field>
                   <field name="quantity"></field>

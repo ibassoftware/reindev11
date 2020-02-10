@@ -30,6 +30,7 @@ class IBASSaleOrder(models.Model):
             if total_cost > 0:
                 rec.total_margin_percent = total_cost / len(rec.order_line)
 
+
 # class ibas_indigo(models.Model):
 #     _name = 'ibas_indigo.ibas_indigo'
 
