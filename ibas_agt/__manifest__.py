@@ -21,7 +21,7 @@
 
     # any module necessary for this one to work correctly
 
-    'depends': ['base','account','stock','sale','stock_landed_costs', 'report_xlsx', 'purchase'],
+    'depends': ['base','account','stock','sale','stock_landed_costs', 'report_xlsx', 'purchase', 'sale_stock'],
 
     # always loaded
     'data': [

@@ -21,7 +21,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base','hr','hr_recruitment', 'analytic', 'hr_contract','web', 'hr_attendance',
-    'resource'],
+    'resource', 'hr_payroll'],
 
     # always loaded
     'data': [
