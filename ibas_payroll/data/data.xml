@@ -77,11 +77,11 @@ result += hourly_rate * worked_days.RDRHOT.number_of_hours * 3.38 </field>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.BASICPAY + categories.PREMIUM</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.PREMIUM</field>
             <field name="sequence" eval="100"/>
         </record>
         <!--Salary Rule 13thMonth Pay / Backpay-->
-        <record id="hr_rule_trips" model="hr.salary.rule">
+        <record id="hr_rule_backpay" model="hr.salary.rule">
             <field name="name">13Th Month Pay</field>
             <field name="category_id" ref="hr_payroll.GROSS"/>
             <field name="code">13thMP</field>
@@ -93,14 +93,14 @@ result += hourly_rate * worked_days.RDRHOT.number_of_hours * 3.38 </field>
             <field name="sequence" eval="110"/>
         </record>
         <!--Salary Rule TRIPS-->
-        <record id="hr_rule_backpay" model="hr.salary.rule">
+        <record id="hr_rule_trips" model="hr.salary.rule">
             <field name="name">TRIPS</field>
             <field name="category_id" ref="hr_payroll.GROSS"/>
             <field name="code">TRIP</field>
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = sum(employee.trip_ids.filtered(lambda r: r.create_date &gt;= payslip.date_from and r.create_date &lt;= payslip.date_to).mapped('amount'))</field>
+            <field name="amount_python_compute">result = sum(employee.trip_ids.filtered(lambda r: r.date &gt;= payslip.date_from and r.date &lt;= payslip.date_to).mapped('amount'))</field>
             <field name="sequence" eval="120"/>
         </record>
         <!--Salary Rule SSS Employer-->
@@ -108,7 +108,7 @@ result += hourly_rate * worked_days.RDRHOT.number_of_hours * 3.38 </field>
             <field name="name">SSS Employer Share</field>
             <field name="category_id" ref="hr_payroll.COMP"/>
             <field name="code">SSSER</field>
-            <field name="appears_on_payslip" eval="True"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.deduct_sss</field>
             <field name="amount_select">code</field>
@@ -132,7 +132,7 @@ result += hourly_rate * worked_days.RDRHOT.number_of_hours * 3.38 </field>
             <field name="name">HDMF Employer Share</field>
             <field name="category_id" ref="hr_payroll.COMP"/>
             <field name="code">HDMFER</field>
-            <field name="appears_on_payslip" eval="True"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.deduct_hdmf</field>
             <field name="amount_select">code</field>
@@ -168,7 +168,7 @@ result += hourly_rate * worked_days.RDRHOT.number_of_hours * 3.38 </field>
             <field name="name">Philhealth Employer Share</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="code">PHILER</field>
-            <field name="appears_on_payslip" eval="True"/>
+            <field name="appears_on_payslip" eval="False"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = payslip.deduct_philhealth</field>
             <field name="amount_select">code</field>
@@ -288,7 +288,8 @@ if contract.schedule_pay == 'monthly':
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = inputs.ADJ</field>
+            <field name="input_ids" eval="[(0, 0, {'code': 'ADJ', 'name': 'Adjustment Value',})]"/>
+            <field name="amount_python_compute">result = inputs.ADJ.amount</field>
             <field name="sequence" eval="500"/>
         </record>
         <!--Salary Rule ADVANCES-->
@@ -299,7 +300,8 @@ if contract.schedule_pay == 'monthly':
             <field name="appears_on_payslip" eval="True"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = inputs.ADJ</field>
+            <field name="input_ids" eval="[(0, 0, {'code': 'ADV', 'name': 'Advances Value',})]"/>
+            <field name="amount_python_compute">result = inputs.ADV.amount</field>
             <field name="sequence" eval="600"/>
         </record>
         <!--Salary Rule SSS Loan-->

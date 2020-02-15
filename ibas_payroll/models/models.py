@@ -86,6 +86,7 @@ class Trip(models.Model):
     def _default_currency(self):
         return self.env.user.company_id.currency_id.id
 
+    date = fields.Date('Date', required=True)
     trip_template_id = fields.Many2one('ibas_hris.trip_template', string='Template')
     loc_from = fields.Char('From Location', required=True)
     loc_to = fields.Char('To Location', required=True)
@@ -121,7 +122,7 @@ class Employee(models.Model):
         payslips = self.env['hr.payslip'].search(
             [('employee_id', '=', self.id), ('date_from', '>=', date_from), ('date_from', '<=', date_to),
              ('id', '!=', current_payslip.id)])
-        lines = payslips.line_ids.filtered(lambda r: r.code == 'NETPAY')
+        lines = payslips.mapped('line_ids').filtered(lambda r: r.code == 'NETPAY')
         return sum(lines.mapped('total'))
 
 
