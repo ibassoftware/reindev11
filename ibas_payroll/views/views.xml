@@ -103,6 +103,7 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="employee_id"/>
+                    <field name="date"/>
                     <field name="loc_from"/>
                     <field name="loc_to"/>
                     <field name="amount"/>
@@ -118,6 +119,7 @@
                         <group>
                             <field name="trip_template_id"/>
                             <field name="employee_id"/>
+                            <field name="date"/>
                             <field name="loc_from"/>
                             <field name="loc_to"/>
                             <field name="amount"/>
