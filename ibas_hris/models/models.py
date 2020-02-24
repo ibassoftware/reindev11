@@ -278,22 +278,22 @@ class ibas_employee_contract(models.Model):
                 rec.philhealth_company = 550
             
 
-    @api.onchange('daily_wage', 'work_days')
-    def _onchange_daily_wage(self):
-        for rec in self:
-            if rec.work_days == "six":
-                rec.wage = (rec.daily_wage * 313 ) / 12
-            else:
-                rec.wage = (rec.daily_wage * 261 ) / 12
+    # @api.onchange('daily_wage', 'work_days')
+    # def _onchange_daily_wage(self):
+    #     for rec in self:
+    #         if rec.work_days == "six":
+    #             rec.wage = (rec.daily_wage * 313 ) / 12
+    #         else:
+    #             rec.wage = (rec.daily_wage * 261 ) / 12
 
-            self.ComputeSSS()
-            self.ComputePhilHealth()
+    #         self.ComputeSSS()
+    #         self.ComputePhilHealth()
     
     @api.onchange('wage')
     def _onchange_wage(self):
         for rec in self:
             if rec.work_days == "six":
-                adr = (rec.wage * 12) / 313
+                adr = rec.wage / 26
                 if adr != rec.daily_wage:
                     rec.daily_wage = adr
             else:

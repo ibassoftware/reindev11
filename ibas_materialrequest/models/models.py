@@ -69,6 +69,7 @@ class MaterialRequestLine(models.Model):
     
     material_request_id = fields.Many2one('ibas_materialrequest.material_request', string='Material Request')
     product_id = fields.Many2one('product.product', string='Product')
+    uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     quantity = fields.Float(string='Quantity')
     quantity_available = fields.Float(string='QTY Available', compute="_compute_available")
 
@@ -77,6 +78,7 @@ class MaterialRequestLine(models.Model):
         for rec in self:
             if rec.product_id:
                 rec.quantity_available = rec.product_id.qty_available
+                rec.uom_id = rec.product_id.uom_id
 
 
 
