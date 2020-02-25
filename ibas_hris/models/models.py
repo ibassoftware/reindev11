@@ -264,18 +264,18 @@ class ibas_employee_contract(models.Model):
     def ComputePhilHealth(self):
         for rec in self:
             if rec.wage <= 10000:
-                rec.philhealth_personal = 137.50
-                rec.philhealth_company = 137.50
-            elif 10000 < rec.wage and rec.wage <= 39999.99:
-                fshare = (rec.wage * 0.0275)
+                rec.philhealth_personal = 150
+                rec.philhealth_company = 150
+            elif 10000 < rec.wage and rec.wage <= 59999.99:
+                fshare = (rec.wage * 0.03)
                 rec.philhealth_personal = round(fshare / 2, 2)
                 rec.philhealth_company = round(fshare / 2, 2)
                 total = rec.philhealth_company + rec.philhealth_personal
                 if total != fshare:
                     rec.philhealth_personal = rec.philhealth_company - 0.01
             else:
-                rec.philhealth_personal = 550
-                rec.philhealth_company = 550
+                rec.philhealth_personal = 900
+                rec.philhealth_company = 900
             
 
     # @api.onchange('daily_wage', 'work_days')
